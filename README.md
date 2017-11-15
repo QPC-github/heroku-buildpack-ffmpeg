@@ -6,27 +6,21 @@ It doesn't do anything else, so to actually compile your app you should use [her
 
 Usage
 -----
-To use this buildpack, you should prepare .buildpacks file that contains this buildpack url and your real buildpack url.  
 
-    $ ls
-    .buildpacks
-    ...
-    
+    # Ruby buildpack
     $ cat .buildpacks
-    https://github.com/shunjikonishi/heroku-buildpack-ffmpeg
-    https://github.com/heroku/heroku-buildpack-play
+    https://github.com/issueapp/heroku-buildpack-ffmpeg
+    https://github.com/heroku/heroku-buildpack-ruby
 
+    # for new project
     $ heroku create --buildpack https://github.com/ddollar/heroku-buildpack-multi
 
+    # for existing project
+    $ heroku buildpacks:set https://github.com/ddollar/heroku-buildpack-multi
+
+    $ heroku config:set FFMPEG_BIN_URL="http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz"
+
     $ git push heroku master
-    ...
 
-You can verify installing ffmpeg by following command.
-
+    # verify and profit!
     $ heroku run "ffmpeg -version"
-
-Hacking
--------
-If you want to use your own ffmpeg binary, fork and rewrite following line.
-
-https://github.com/shunjikonishi/heroku-buildpack-ffmpeg/blob/master/bin/compile#L10

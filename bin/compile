@@ -4,20 +4,43 @@ indent() {
   sed -u 's/^/       /'
 }
 
-echo "-----> Install ffmpeg"
 BUILD_DIR=$1
-VENDOR_DIR="vendor"
-DOWNLOAD_URL="http://flect.github.io/heroku-binaries/libs/ffmpeg.tar.gz"
-
-echo "DOWNLOAD_URL = " $DOWNLOAD_URL | indent
-
-cd $BUILD_DIR
-mkdir -p $VENDOR_DIR
-cd $VENDOR_DIR
-curl -L --silent $DOWNLOAD_URL | tar xz
-
-echo "exporting PATH and LIBRARY_PATH" | indent
+CACHE_DIR=$2
+ENV_DIR=$3
+VENDOR_BIN_DIR="$BUILD_DIR/vendor/bin"
 PROFILE_PATH="$BUILD_DIR/.profile.d/ffmpeg.sh"
-mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:$HOME/vendor/ffmpeg/bin"' >> $PROFILE_PATH
-echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/vendor/ffmpeg/lib"' >> $PROFILE_PATH
+FFMPEG_BIN_URL="http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz"
+if [ -f "$ENV_DIR/FFMPEG_BIN_URL" ]; then
+  FFMPEG_BIN_URL=$(cat $ENV_DIR/FFMPEG_BIN_URL)
+fi
+FFMPEG_FILE=${FFMPEG_BIN_URL##*/}
+
+mkdir="mkdir -p"
+case ${FFMPEG_FILE##*.} in
+  bz2) tar="tar xj" ;;
+  gz)  tar="tar xz" ;;
+  xz)  tar="tar x"  ;;
+  *)
+    echo "Fail to uncompress $FFMPEG_FILE because only xz, gzip, bzip2 are supported." | indent
+    exit 1
+    ;;
+esac
+download="curl -L -s --create-dirs -o"
+extract="${tar} -C $VENDOR_BIN_DIR --strip-components 1 --wildcards -f"
+
+
+echo "-----> Installing ffmpeg..."
+
+$mkdir $VENDOR_BIN_DIR
+$mkdir ${PROFILE_PATH%/*}
+
+if [ ! -f "$CACHE_DIR/$FFMPEG_FILE" ]; then
+  echo "downloading ffmpeg: $FFMPEG_BIN_URL" | indent
+  $download $CACHE_DIR/$FFMPEG_FILE $FFMPEG_BIN_URL
+  #TODO sha256sum $CACHE_DIR/$FFMPEG_FILE
+fi
+
+$extract $CACHE_DIR/$FFMPEG_FILE *ffmpeg
+
+echo "exporting PATH" | indent
+echo 'export PATH="$PATH:$HOME/vendor/bin"' >> $PROFILE_PATH
