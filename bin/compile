@@ -9,7 +9,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 VENDOR_BIN_DIR="$BUILD_DIR/vendor/bin"
 PROFILE_PATH="$BUILD_DIR/.profile.d/ffmpeg.sh"
-FFMPEG_BIN_URL="http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz"
+FFMPEG_BIN_URL="https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz"
 if [ -f "$ENV_DIR/FFMPEG_BIN_URL" ]; then
   FFMPEG_BIN_URL=$(cat $ENV_DIR/FFMPEG_BIN_URL)
 fi
