@@ -43,4 +43,4 @@ fi
 $extract $CACHE_DIR/$FFMPEG_FILE *ffmpeg
 
 echo "exporting PATH" | indent
-echo 'export PATH="$PATH:$HOME/vendor/bin"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:/app/vendor/bin"' >> $PROFILE_PATH
