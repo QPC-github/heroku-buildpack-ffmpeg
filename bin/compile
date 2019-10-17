@@ -16,7 +16,7 @@ PROFILE_PATH3="$BUILD_DIR/.profile.d/ffserver.sh"
 PROFILE_PATH4="$BUILD_DIR/.profile.d/qt-faststart.sh"
 
 
-FFMPEG_BIN_URL="http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz"
+FFMPEG_BIN_URL="https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
 if [ -f "$ENV_DIR/FFMPEG_BIN_URL" ]; then
   FFMPEG_BIN_URL=$(cat $ENV_DIR/FFMPEG_BIN_URL)
 fi
